@@ -6,11 +6,11 @@
 # Homepage: http://www.openp2pdesign.org
 # License: GPL v.3
 #
-# Requisite: 
+# Requisite:
 # install pyGithub with pip install PyGithub
 # install NetworkX with pip install networkx
 #
-# PyGitHub documentation can be found here: 
+# PyGitHub documentation can be found here:
 # https://github.com/jacquev6/PyGithub
 #
 
@@ -20,7 +20,7 @@ import getpass
 import os
 
 # Clear screen
-os.system('cls' if os.name=='nt' else 'clear')
+os.system('cls' if os.name == 'nt' else 'clear')
 
 from repoanalysis import analyse_repo
 
@@ -28,10 +28,9 @@ from repoanalysis import analyse_repo
 
 graph = nx.MultiDiGraph()
 issue = {}
-issue = {0:{"author":"none", "comments":{}}}
-commits = {0:{"commit","sha"}}
+issue = {0: {"author": "none", "comments": {}}}
+commits = {0: {"commit", "sha"}}
 repos = {}
-
 
 
 if __name__ == "__main__":
@@ -41,36 +40,37 @@ if __name__ == "__main__":
     password = getpass.getpass("Login: Enter yor password: ")
     username = raw_input("Enter the username you want to analyse: ")
     print ""
-    g = Github( userlogin, password )
-    
-    
+    g = Github(userlogin, password)
+
     print "ORGANIZATIONS:"
     for i in g.get_user(username).get_orgs():
         print "-", i.login
     print ""
-    
-    org_to_mine = raw_input("Enter the name of the Organization you want to analyse: ")
+
+    org_to_mine = raw_input(
+        "Enter the name of the Organization you want to analyse: ")
     print ""
-    
+
     org = g.get_organization(org_to_mine)
-    
-    print org.login,"has",org.public_repos, "repositories."
-    
+
+    print org.login, "has", org.public_repos, "repositories."
+
     print ""
-    
+
     for repo in org.get_repos():
-        print "-",repo.name
-    
+        print "-", repo.name
+
     print ""
-    
-    repo_to_mine = raw_input("Enter the name of the repository you want to mine: ")
+
+    repo_to_mine = raw_input(
+        "Enter the name of the repository you want to mine: ")
     b = org.get_repo(repo_to_mine)
-    analyse_repo(b,graph)
-    
+    analyse_repo(b, graph)
+
     # Getting rid of the node "None", it was used to catch the errors of users that are NoneType
     if "None" in graph:
-	    graph.remove_node('None')
-    
+        graph.remove_node('None')
+
     print ""
     print "NODES..."
     print graph.nodes()
@@ -78,7 +78,8 @@ if __name__ == "__main__":
     print "EDGES..."
     print graph.edges()
     print ""
-    
+
     print "Saving the network..."
-    nx.write_gexf(graph, username+"_"+repo_to_mine+"_social_interactions_analysis.gexf")
+    nx.write_gexf(graph, username+"_"+repo_to_mine +
+                  "_social_interactions_analysis.gexf")
     print "Done. Saved as "+username+"_"+repo_to_mine+"_social_interactions_analysis.gexf"
