@@ -41,18 +41,18 @@ def analyse_repo(repository, graph):
                 graph.node[i.login]["watcher"] = "Yes"
         else:
             graph.node["None"]["watcher"] = "Yes"
-    print "-----"
-    print "COLLABORATORS"
-    print ""
-    for i in repository.get_collaborators():
-        if i != None:
-            print "-", i.login
-            if i.login not in graph:
-                graph.add_node(str(unicode(i.login)), collaborator="Yes")
-            else:
-                graph.node[i.login]["collaborator"] = "Yes"
-        else:
-            graph.node["None"]["collaborator"] = "Yes"
+#    print "-----"
+#    print "COLLABORATORS"
+#    print ""
+#    for i in repository.get_collaborators():
+#        if i != None:
+#            print "-",i.login
+#            if i.login not in graph:
+#                graph.add_node(str(unicode(i.login)),collaborator="Yes")
+#            else:
+#                graph.node[i.login]["collaborator"]="Yes"
+#        else:
+#            graph.node["None"]["collaborator"]="Yes"
     print "-----"
     print "HAS ISSUES=", repository.has_issues
     if repository.has_issues == True:
@@ -188,12 +188,14 @@ def analyse_repo(repository, graph):
         for m, f in enumerate(i.get_comments()):
             print "- Commented by: ", f.user.login
             comm[k]["comments"][m] = f.user.login
-            graph.add_edge(str(f.user.login), str(i.author.login))
-            print "- Adding an edge from ", f.user.login, "to", i.author.login
+            if hasattr(i, 'user') and i.user != None and i.author != None:
+                graph.add_edge(str(f.user.login), str(i.author.login))
+                print "- Adding an edge from ", f.user.login, "to", i.author.login
 
-            for l in range(m):
-                print "- Adding an edge from ", f.user.login, "to", comm[k]["comments"][l]
-                graph.add_edge(str(f.user.login), str(comm[k]["comments"][l]))
+                for l in range(m):
+                    print "- Adding an edge from ", f.user.login, "to", comm[k]["comments"][l]
+                    graph.add_edge(str(f.user.login),
+                                   str(comm[k]["comments"][l]))
 
     print "-----"
 
