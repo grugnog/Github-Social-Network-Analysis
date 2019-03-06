@@ -16,6 +16,7 @@
 
 from github import Github
 import networkx as nx
+import time
 
 issue = {}
 issue = {0: {"author": "none", "comments": {}}}
@@ -33,6 +34,7 @@ def analyse_repo(repository, graph):
     print "WATCHERS:", repository.watchers
     print ""
     for i in repository.get_stargazers():
+        time.sleep(0.3)
         if i != None:
             print "-", i.login
             if i.login not in graph:
@@ -60,6 +62,7 @@ def analyse_repo(repository, graph):
         print "ISSUES: Open ones"
         print ""
         for i in repository.get_issues(state="open"):
+            time.sleep(0.3)
             print "Issue number:", i.number
             if i.user != None:
                 print "- Created by", i.user.login
@@ -91,6 +94,7 @@ def analyse_repo(repository, graph):
         print "ISSUES: Closed ones"
         print ""
         for i in repository.get_issues(state="closed"):
+            time.sleep(0.3)
             print "Issue number:", i.number
             if i.user != None:
                 print "- Created by", i.user.login
@@ -123,6 +127,7 @@ def analyse_repo(repository, graph):
     print "CONTRIBUTORS"
     print ""
     for i in repository.get_contributors():
+        time.sleep(0.3)
         if i.login != None:
             print "-", i.login
             if i.login not in graph:
@@ -137,6 +142,7 @@ def analyse_repo(repository, graph):
 
     repos[0] = {0: ""}
     for k, i in enumerate(repository.get_commits()):
+        time.sleep(0.3)
         print "-", i.sha
         if i.committer != None:
             print "-- by", i.committer.login
@@ -180,12 +186,14 @@ def analyse_repo(repository, graph):
     comm = {}
 
     for k, i in enumerate(repository.get_commits()):
+        time.sleep(0.3)
         if i.author != None:
             print "Commit by: ", i.author.login
         comm[k] = {}
         comm[k]["comments"] = {}
 
         for m, f in enumerate(i.get_comments()):
+            time.sleep(0.3)
             print "- Commented by: ", f.user.login
             comm[k]["comments"][m] = f.user.login
             if hasattr(i, 'user') and i.user != None and i.author != None:
@@ -208,6 +216,7 @@ def analyse_repo(repository, graph):
     print ""
 
     for a, b in enumerate(issue):
+        time.sleep(0.3)
         print "-----"
         print "Issue author:", issue[a]["author"]
         print ""
@@ -238,6 +247,7 @@ def analyse_repo(repository, graph):
     print ""
 
     for i in repository.get_pulls():
+        time.sleep(0.3)
         print i.id
         if i.assignee != None:
             print "Assignee:", i.assignee.login

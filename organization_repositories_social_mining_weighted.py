@@ -18,6 +18,7 @@ from github import Github
 import networkx as nx
 import getpass
 import os
+import urllib3
 
 # Clear screen
 os.system('cls' if os.name == 'nt' else 'clear')
@@ -40,7 +41,15 @@ if __name__ == "__main__":
     password = getpass.getpass("Login: Enter yor password: ")
     username = raw_input("Enter the username you want to analyse: ")
     print ""
-    g = Github(userlogin, password)
+    status_forcelist = (500, 502, 504, 403)
+    retry_data = urllib3.Retry(
+        total=1000,
+        read=300,
+        connect=300,
+        backoff_factor=0.5,
+        status_forcelist=status_forcelist
+    )
+    g = Github(userlogin, password, retry=retry_data)
 
     print "ORGANIZATIONS:"
     for i in g.get_user(username).get_orgs():
@@ -87,7 +96,7 @@ if __name__ == "__main__":
 
     for j in list(graph.nodes_iter(data=True)):
         graph2.add_node(j[0])
-        	    
+
     for j in list(graph.edges_iter(data=True)):
         subject_id = j[0]
         object_id = j[1]

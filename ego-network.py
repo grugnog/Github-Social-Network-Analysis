@@ -18,6 +18,7 @@ from github import Github
 import networkx as nx
 import getpass
 import os
+import urllib3
 
 # Clear screen
 os.system('cls' if os.name == 'nt' else 'clear')
@@ -28,7 +29,15 @@ username = raw_input("Enter your username: ")
 password = getpass.getpass("Enter yor password: ")
 user = raw_input("Enter the username to mine: ")
 print ""
-g = Github(username, password)
+status_forcelist = (500, 502, 504, 403)
+retry_data = urllib3.Retry(
+    total=1000,
+    read=300,
+    connect=300,
+    backoff_factor=0.5,
+    status_forcelist=status_forcelist
+)
+g = Github(userlogin, password, retry=retry_data)
 
 graph = nx.DiGraph()
 
